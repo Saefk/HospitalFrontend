@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { Outlet, Link } from "react-router-dom";
 
 
 function App() {
+  const [jwtToken, setJwtToken] = useState("");
+
   return (
     <div className ="container">
       <div className="row">
@@ -10,8 +13,11 @@ function App() {
         </div>
 
         <div className="col text-end">
-          <a href = "#!"><span className="badge bg-success">Login</span></a>
-        </div>
+          {jwtToken ===""
+          ?<Link to = "/login"><span className="badge bg-success">Login</span></Link>
+          : <a href= "#!"><span className="badge bg-danger">Logout</span></a>
+        }
+          </div>
         <hr className="mb-3"></hr>
       </div>
 
@@ -24,16 +30,22 @@ function App() {
                   only the component 
               */}
               <Link to= "/" className="list-group-item list-group-item-action">Home</Link>
-              <Link to= "/doctors" className="list-group-item list-group-item-action">Doctors</Link>
-              <Link to= "/patients" className="list-group-item list-group-item-action">Patients</Link>
-              <Link to= "/wards" className="list-group-item list-group-item-action">Wards</Link>
-              <Link to= "/staff/cases" className="list-group-item list-group-item-action">Case Files</Link>
-              <Link to= "/staff/analytics" className="list-group-item list-group-item-action">Analytics</Link>
-            </div>
+              {jwtToken !=="" &&
+              <>
+                <Link to= "/doctors" className="list-group-item list-group-item-action">Doctors</Link>
+                <Link to= "/patients" className="list-group-item list-group-item-action">Patients</Link>
+                <Link to= "/wards" className="list-group-item list-group-item-action">Wards</Link>
+                <Link to= "/staff/cases" className="list-group-item list-group-item-action">Case Files</Link>
+                <Link to= "/staff/analytics" className="list-group-item list-group-item-action">Analytics</Link>
+               </>
+               }  
+              </div>
           </nav>
         </div>
         <div className="col-md-10">
-          <Outlet />
+          <Outlet context = {{
+            jwtToken, setJwtToken
+          }}/>
         </div>
       </div>
     </div>
